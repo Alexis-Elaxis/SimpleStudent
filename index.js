@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const config = require('../config.json');
 const client = new Discord.Client();
 
 const guildId = "755744734974050335";
@@ -59,4 +60,4 @@ const errortomember = (interaction, response) => {
     })
 }
 
-client.login("NzU2NjAxNDc0NzQ1ODkzMDc0.X2UOCA.iLAinb2-_B6jcxK8F1TugEg9wG8");
+client.login(config.token);
