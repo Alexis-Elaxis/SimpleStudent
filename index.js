@@ -20,7 +20,7 @@ client.on('ready', async () => {
     await getApp(guildId).commands.post({
         data: {
             name: "ping",
-            description: "pong !",
+            description: "Pong !",
         }
     });
 
@@ -66,7 +66,7 @@ client.on('ready', async () => {
         } else if(command === "annonce") {
 
             const roles = interaction.member.roles
-            if(roles.includes("756485927592787969")) {
+            if(roles.includes("756485927592787969") || roles.includes("757649239789797407")) {
                 const embed = new Discord.MessageEmbed()
                     .setColor("RED")
                     .setTimestamp()
@@ -82,7 +82,7 @@ client.on('ready', async () => {
                     msg.delete()
                 })
             } else {
-                return errortomember(interaction, '❌ Vous n\'êtes pas un professeur ')
+                return errortomember(interaction, '❌ Vous n\'êtes pas un professeur ou un délégué.')
             }
         }
     })
