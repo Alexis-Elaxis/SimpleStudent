@@ -13,7 +13,31 @@ const getApp = (guildId) => {
 }
 
 client.on('ready', async () => {
+    client.user.setActivity('Chargement des composants')
     console.log('The bot is ready');
+
+    setInterval(function(){
+        const date = new Date(); const hour = date.getUTCHours(); const d = date.getUTCDay();
+        const h = hour+2;
+        if(d < 5) {
+            console.log(h);
+            if (h < 7) {
+                client.user.setActivity('🛏️ Dormir')
+            } else if(h <= 8) {
+                client.user.setActivity('👀 Se préparer pour les cours')
+            } else if (h <= 12) {
+                client.user.setActivity('📚 Travailler')
+            } else if (h <= 14) {
+                client.user.setActivity('🍽️ Manger')
+            } else if (h <= 21) {
+                client.user.setActivity('📚 Travailler')
+            } else if (h <= 00) {
+                client.user.setActivity('🛏️ Dormir')
+            }
+        } else {
+            client.user.setActivity('🎉 C\' est le week-end !')
+        }
+    }, 60000);
 
     const commands = await getApp(guildId).commands.get();
 
@@ -35,6 +59,21 @@ client.on('ready', async () => {
                 {
                     name: 'contenu',
                     description: 'Contenu de l\'annonce',
+                    required: true,
+                    type: 3
+                }
+            ]
+        }
+    })
+
+    await getApp(guildId).commands.post({
+        data: {
+            name: 'translate',
+            description: 'Traduisez un mot en utilisant WordReference',
+            options: [
+                {
+                    name: 'mot',
+                    description: 'Mot à traduire',
                     required: true,
                     type: 3
                 }
@@ -83,6 +122,10 @@ client.on('ready', async () => {
                 })
             } else {
                 return errortomember(interaction, '❌ Vous n\'êtes pas un professeur ou un délégué.')
+            }
+        } else if(command === "translate") {
+            for (const arg in args){
+                const value = args[arg]
             }
         }
     })
@@ -133,7 +176,7 @@ const errortomember = (interaction, response) => {
             type: 3,
             data : {
                 content: response,
-                flags: 6
+                flags: 64
             }
         }
     })
