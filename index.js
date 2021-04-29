@@ -1,5 +1,9 @@
 const Discord = require('discord.js');
+const Reverso = require('reverso-api');
+
 const config = require('./config.json');
+
+const reverso = new Reverso();
 const client = new Discord.Client();
 
 const guildId = "755744734974050335";
@@ -21,7 +25,7 @@ client.on('ready', async () => {
         const h = hour+2;
         if(d < 5) {
             console.log(h);
-            if (h < 7) {
+            if (h <= 7) {
                 client.user.setActivity('🛏️ Dormir')
             } else if(h <= 8) {
                 client.user.setActivity('👀 Se préparer pour les cours')
@@ -68,8 +72,23 @@ client.on('ready', async () => {
 
     await getApp(guildId).commands.post({
         data: {
+            name: 'message',
+            description: 'Envoyez un message en mentionnant tout les utilisateurs du serveur !',
+            options: [
+                {
+                    name: 'contenu',
+                    description: 'Contenu de l\'annonce',
+                    required: true,
+                    type: 3
+                }
+            ]
+        }
+    })
+
+    await getApp(guildId).commands.post({
+        data: {
             name: 'translate',
-            description: 'Traduisez un mot en utilisant WordReference',
+            description: 'Traduisez un mot en utilisant Reverso (WordReference c\'est pas ouf)',
             options: [
                 {
                     name: 'mot',
@@ -126,6 +145,17 @@ client.on('ready', async () => {
         } else if(command === "translate") {
             for (const arg in args){
                 const value = args[arg]
+                reverso.getTranslation(value, 'English', 'French').then(response => {
+                    const embed = new Discord.MessageEmbed()
+                    .setColor("RED")
+                    .setTimestamp()
+                    .setFooter("Made by Alexis with ❤️")
+                    .addField("**Traduction: **" + value, "<:arrow:808822478821654530> " + response.translation);
+
+                    replyembed(interaction, embed)
+                }).catch(err => {
+                    return errortomember(interaction, '❌ Une mystérieuse erreur s\'est produite.')
+                })
             }
         }
     })
